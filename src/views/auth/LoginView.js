@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -10,7 +10,11 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
-import Page from 'src/components/Page';
+import useAxios from 'axios-hooks';
+import { SERVICES } from '../../configs';
+import { useTokenContext } from '../../contexts';
+import { decodeToken } from '../../utils/converter';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,21 +35,60 @@ const useStyles = makeStyles(theme => ({
 const LoginView = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  // const history = useHistory();
+
+  const { setToken } = useTokenContext();
+
+  const [serverState, setServerState] = useState();
+  
+
+  const handleServerResponse = (ok, msg) => {
+    setServerState({ ok, msg });
+  };
+
+  const [, loginForm] = useAxios(
+    {
+      url: SERVICES.LOGIN_FORM,
+      method: 'POST',
+    },
+    { manual: true }
+  );
+
+  const handleLogin = async (values, actions) => {
+    handleServerResponse(false);
+
+    try {
+      const response = await loginForm({ data: values });
+      const { token } = response.data
+      window.localStorage.setItem('authToken', token);
+      setToken(token);
+
+      const { role } = decodeToken(token);
+
+      if(role === 'admin') {
+        navigate('/app/dashboard', { replace: true });
+      }
+
+    } catch (error) {
+      const { email } = error.response.data;
+      actions.setSubmitting(false);
+      handleServerResponse(true, email);
+    }
+  };
 
   return (
     <>
-    {/* <Page className={classes.root} title="Login"> */}
       <Box
         display="flex"
         flexDirection="column"
         height="100%"
         justifyContent="center"
       >
-        <Container className={classes.formLogin} maxWidth="xs" >
+        <Container className={classes.formLogin} maxWidth="xs">
           <Formik
             initialValues={{
-              email: 'demo@devias.io',
-              password: 'Password123'
+              email: '',
+              password: ''
             }}
             validationSchema={Yup.object().shape({
               email: Yup.string()
@@ -56,9 +99,10 @@ const LoginView = () => {
                 .max(255)
                 .required('Password is required')
             })}
-            onSubmit={() => {
-              navigate('/app/dashboard', { replace: true });
-            }}
+            // onSubmit={() => {
+            //   navigate('/app/dashboard', { replace: true });
+            // }}
+            onSubmit={handleLogin}
           >
             {({
               errors,
@@ -72,16 +116,14 @@ const LoginView = () => {
               <form onSubmit={handleSubmit}>
                 <Box mb={3}>
                   <Typography color="textPrimary" variant="h2">
-                    Sign in
-                  </Typography>
-                  <Typography
-                    color="textSecondary"
-                    gutterBottom
-                    variant="body2"
-                  >
-                    Sign in on the internal platform
+                    Sign in as Admin
                   </Typography>
                 </Box>
+                {serverState && (
+                  <p className={!serverState.ok ? 'errorMsg' : ''}>
+                    {serverState.msg}
+                  </p>
+                )}
                 <TextField
                   error={Boolean(touched.email && errors.email)}
                   fullWidth
@@ -117,7 +159,7 @@ const LoginView = () => {
                     type="submit"
                     variant="contained"
                   >
-                    Sign in now
+                    Sign in
                   </Button>
                 </Box>
               </form>
@@ -125,7 +167,6 @@ const LoginView = () => {
           </Formik>
         </Container>
       </Box>
-    {/* </Page> */}
     </>
   );
 };

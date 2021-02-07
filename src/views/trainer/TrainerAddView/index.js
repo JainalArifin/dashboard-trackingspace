@@ -5,7 +5,6 @@ import {
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
-import TrainerPicture from './TrainerPicture';
 import TrainerForm from './TrainerForm';
 
 const useStyles = makeStyles((theme) => ({
@@ -30,14 +29,6 @@ const TrainerAddView = () => {
           container
           spacing={3}
         >
-          <Grid
-            item
-            lg={4}
-            md={6}
-            xs={12}
-          >
-            <TrainerPicture />
-          </Grid>
           <Grid
             item
             lg={8}

@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
-import {
-  Box,
-  Container,
-  makeStyles
-} from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Box, Container, makeStyles } from '@material-ui/core';
 import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
 import data from './data';
+import useAxios from 'axios-hooks';
+import { SERVICES } from 'src/configs';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.dark,
     minHeight: '100%',
@@ -21,16 +19,39 @@ const useStyles = makeStyles((theme) => ({
 const TrainerListView = () => {
   const classes = useStyles();
   const [classroom] = useState(data);
+  const [limit, setLimit] = useState(5);
+  const [page, setPage] = useState(0);
+  const [search, setSearch] = useState(null);
+
+  const [{ data: dataTrainer, loading, error }, refetch] = useAxios({
+    url: SERVICES.GET_TRAINER,
+    method: 'GET',
+    params: { perPage: limit, page: page + 1, search }
+  });
+
+  const handleSearch = (e) => {
+    
+      setSearch(e.target.value);
+      refetch();
+    
+  }
 
   return (
-    <Page
-      className={classes.root}
-      title="Room"
-    >
+    <Page className={classes.root} title="Room">
       <Container maxWidth={false}>
-        <Toolbar />
+        <Toolbar handleSearch={handleSearch} search={search} />
         <Box mt={3}>
-          <Results classroom={classroom} />
+          <Results
+            classroom={classroom}
+            dataTrainer={dataTrainer}
+            loading={loading}
+            error={error}
+            refetch={refetch}
+            limit={limit}
+            setLimit={setLimit}
+            page={page}
+            setPage={setPage}
+          />
         </Box>
       </Container>
     </Page>

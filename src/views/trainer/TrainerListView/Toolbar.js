@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ className, handleSearch, search, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -37,12 +37,6 @@ const Toolbar = ({ className, ...rest }) => {
         display="flex"
         justifyContent="flex-end"
       >
-        {/* <Button className={classes.importButton}>
-          Import
-        </Button>
-        <Button className={classes.exportButton}>
-          Export
-        </Button> */}
         <Link
           component={RouterLink}
           to="/app/trainer/add"
@@ -74,8 +68,11 @@ const Toolbar = ({ className, ...rest }) => {
                     </InputAdornment>
                   )
                 }}
-                placeholder="Search Title Trainer"
+                onChange={handleSearch}
+                placeholder="Search Name Trainer"
                 variant="outlined"
+                name="search"
+                value={search}
               />
             </Box>
           </CardContent>

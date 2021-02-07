@@ -74,7 +74,7 @@ const Toolbar = ({ className, ...rest }) => {
                     </InputAdornment>
                   )
                 }}
-                placeholder="Search Title Trainer"
+                placeholder="Search Name Trainer"
                 variant="outlined"
               />
             </Box>

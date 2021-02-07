@@ -25,15 +25,15 @@ import AdminListView from './views/admin/AdminListView';
 import AdminAddView from './views/admin/AdminAddView';
 import AdminEditView from './views/admin/AdminEditView';
 
-const routes = [
+const routes = (isLogin) => [
   {
     path: 'app',
-    element: <DashboardLayout />,
+    element: isLogin ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'account', element: <AccountView /> },
       { path: 'trainer', element: <TrainerListView /> },
       { path: 'trainer/add', element: <TrainerAddView /> },
-      { path: 'trainer/edit', element: <TrainerEditView /> },
+      { path: 'trainer/edit/:id', element: <TrainerEditView /> },
       { path: 'classroom', element: <Classroom /> },
       { path: 'classroom/add', element: <ClassroomAddView /> },
       { path: 'classroom/edit', element: <ClassroomEditView /> },

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-  Avatar,
+  Button,
   Box,
   Card,
   Table,
@@ -13,39 +12,80 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
   makeStyles,
   IconButton,
   Menu,
   MenuItem,
-  Link
+  Link,
+  Modal,
+  Snackbar
 } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
-import getInitials from 'src/utils/getInitials';
 import { MoreHorizontal } from 'react-feather';
+import useAxios from 'axios-hooks';
+import { SERVICES } from 'src/configs';
+import MuiAlert from '@material-ui/lab/Alert';
+import moment from 'moment';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
     marginRight: theme.spacing(2)
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    // boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3)
   }
 }));
 
-const Results = ({ className, classroom, ...rest }) => {
+const Results = ({
+  className,
+  classroom,
+  queryData,
+  loading,
+  error,
+  refetch,
+  limit,
+  setLimit,
+  page,
+  setPage,
+  ...rest
+}) => {
   const classes = useStyles();
-  const [selecteditemIds, setSelecteditemIds] = useState([]);
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currenEvent, setEvent] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
+  const [, deleteEvent] = useAxios(
+    {
+      url: SERVICES.DELETE_EVENT(currenEvent._id),
+      method: 'DELETE'
+    },
+    { manual: true }
+  );
+
   const handleLimitChange = event => {
     setLimit(event.target.value);
+    refetch();
   };
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
+    refetch();
   };
 
   const handleClick = event => {
@@ -56,6 +96,25 @@ const Results = ({ className, classroom, ...rest }) => {
     setAnchorEl(null);
   };
 
+  const handleModalDelete = event => {
+    setModalOpen(true);
+    setEvent(event);
+    handleClose();
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleDeleteTrainer = async () => {
+    try {
+      await deleteEvent();
+      setOpenSnackbar(true);
+      setModalOpen(false);
+      refetch();
+    } catch (error) {}
+  };
+
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <PerfectScrollbar>
@@ -64,68 +123,126 @@ const Results = ({ className, classroom, ...rest }) => {
             <TableHead>
               <TableRow>
                 <TableCell>Title</TableCell>
-                <TableCell>Date</TableCell>
                 <TableCell>Time</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Date</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {classroom.slice(0, limit).map(item => (
-                <TableRow hover key={item.id}>
-                  <TableCell>
-                    <Box alignItems="center" display="flex">
-                      <Avatar className={classes.avatar} src={item.avatarUrl}>
-                        {getInitials(item.title)}
-                      </Avatar>
-                      <Typography color="textPrimary" variant="body1">
-                        {item.title}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>{item.participation}</TableCell>
-                  <TableCell>{item.phone}</TableCell>
-                  <TableCell>Open</TableCell>
-                  <TableCell>
-                    <IconButton
-                      aria-controls="simple-menu"
-                      aria-haspopup="true"
-                      onClick={handleClick}
-                    >
-                      <MoreHorizontal />
-                    </IconButton>
-                    <Menu
-                      id="simple-menu"
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleClose}
-                    >
-                      <Link
-                        component={RouterLink}
-                        to="/app/event/edit"
-                        underline="none"
-                      >
-                        <MenuItem onClick={handleClose}>Edit</MenuItem>
-                      </Link>
-                      <MenuItem onClick={handleClose}>View Details</MenuItem>
-                      <MenuItem onClick={handleClose}>Delete</MenuItem>
-                    </Menu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+            {(() => {
+              if (loading) {
+                return <h3 style={{ padding: 10 }}>Waiting Fetch Data ...</h3>;
+              }
+
+              if (error) {
+                return 'Error';
+              }
+
+              if (queryData) {
+                return (
+                  <TableBody>
+                    {console.log({ queryData })}
+                    {queryData.data.map((event, index) => {
+                      return (
+                        <TableRow hover key={index}>
+                          <TableCell>{event.title}</TableCell>
+                          <TableCell>{event.time}</TableCell>
+                          <TableCell>{moment(event.date).format('DD MMM YYYY')}</TableCell>
+                          <TableCell>
+                            <IconButton
+                              aria-controls="simple-menu"
+                              aria-haspopup="true"
+                              onClick={handleClick}
+                            >
+                              <MoreHorizontal />
+                            </IconButton>
+                            <Menu
+                              id="simple-menu"
+                              anchorEl={anchorEl}
+                              open={open}
+                              onClose={handleClose}
+                            >
+                              <Link
+                                component={RouterLink}
+                                to={`/app/event/edit/${event._id}`}
+                                underline="none"
+                              >
+                                <MenuItem onClick={handleClose}>Edit</MenuItem>
+                              </Link>
+                              <MenuItem
+                                onClick={() => handleModalDelete(event)}
+                              >
+                                Delete
+                              </MenuItem>
+                            </Menu>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                );
+              }
+
+              return null;
+            })()}
           </Table>
         </Box>
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={classroom.length}
+        count={queryData && queryData.total_data && queryData.total_data}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
         rowsPerPage={limit}
         rowsPerPageOptions={[5, 10, 25]}
       />
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        className={classes.modal}
+        open={modalOpen}
+        onClose={handleCloseModal}
+      >
+        <div className={classes.paper}>
+          <h2 id="transition-modal-title">Wait a minute...</h2>
+          <br />
+          <p id="transition-modal-description">
+            Are you sure you want to delete {currenEvent.title}?
+          </p>
+          <br />
+          <div>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleCloseModal}
+            >
+              cancel
+            </Button>{' '}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleDeleteTrainer}
+            >
+              delete
+            </Button>
+          </div>
+        </div>
+      </Modal>
+      <Snackbar
+        variant="success"
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right'
+        }}
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={() => setOpenSnackbar(false)}
+        message="Berhasil di hapus"
+      >
+        <Alert onClose={() => setOpenSnackbar(false)} severity="success">
+          Berhasil di hapus
+        </Alert>
+      </Snackbar>
     </Card>
   );
 };
