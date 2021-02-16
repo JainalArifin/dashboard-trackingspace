@@ -12,43 +12,43 @@ import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
 import ClassroomAddView from './views/classroom/ClassroomAddView';
 import ClassroomEditView from './views/classroom/ClassroomEditView';
-import EventListView from './views/event/EventListView';
-import EventAddView from './views/event/EventAddView';
-import EventEditView from './views/event/EventEditView';
-import RoomListView from './views/room/RoomListView';
-import RoomAddView from './views/room/RoomAddView';
-import RoomEditView from './views/room/RoomEditView';
+import EventTable from './views/event/EventTable';
+import EventForm from './views/event/EventForm';
+import RoomTable from './views/room/RoomTable';
+import RoomForm from './views/room/RoomForm';
+
 import TrainerListView from './views/trainer/TrainerListView';
 import TrainerAddView from './views/trainer/TrainerAddView';
 import TrainerEditView from './views/trainer/TrainerEditView';
-import AdminListView from './views/admin/AdminListView';
-import AdminAddView from './views/admin/AdminAddView';
-import AdminEditView from './views/admin/AdminEditView';
+import MemberTable from './views/member/MemberTable';
+import VideoClassTable from './views/videoClass/VideoClassTable';
+import VideoClassForm from './views/videoClass/VideoClassForm';
 
 const routes = (isLogin) => [
   {
     path: 'app',
     element: isLogin ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
-      { path: 'account', element: <AccountView /> },
+      { path: 'account', element: <AccountView /> }, //1
       { path: 'trainer', element: <TrainerListView /> },
       { path: 'trainer/add', element: <TrainerAddView /> },
       { path: 'trainer/edit/:id', element: <TrainerEditView /> },
       { path: 'classroom', element: <Classroom /> },
       { path: 'classroom/add', element: <ClassroomAddView /> },
       { path: 'classroom/edit', element: <ClassroomEditView /> },
-      { path: 'event', element: <EventListView /> },
-      { path: 'event/add', element: <EventAddView /> },
-      { path: 'event/edit', element: <EventEditView /> },
-      { path: 'room', element: <RoomListView /> },
-      { path: 'room/add', element: <RoomAddView /> },
-      { path: 'room/edit', element: <RoomEditView /> },
-      { path: 'admin', element: <AdminListView /> },
-      { path: 'admin/add', element: <AdminAddView /> },
-      { path: 'admin/edit', element: <AdminEditView /> },
+      { path: 'event', element: <EventTable /> },
+      { path: 'event/add', element: <EventForm /> },
+      { path: 'event/edit', element: <EventForm /> },
+      { path: 'room', element: <RoomTable /> },
+      { path: 'room/add', element: <RoomForm /> },
+      { path: 'room/edit', element: <RoomForm /> },
+      { path: 'video-class', element: <VideoClassTable /> },
+      { path: 'video-class/add', element: <VideoClassForm /> },
+      { path: 'video-class/edit', element: <VideoClassForm /> },
+      { path: 'member', element: <MemberTable /> },
       { path: 'dashboard', element: <DashboardView /> },
-      { path: 'products', element: <ProductListView /> },
-      { path: 'settings', element: <SettingsView /> },
+      { path: 'products', element: <ProductListView /> }, // 2
+      { path: 'settings', element: <SettingsView /> }, // 3
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },

@@ -22,7 +22,6 @@ export default function useTokenContext() {
   // const authToken = window.localStorage.getItem('authToken');
   // setToken(authToken);
   
-  // console.log('--', token);
 
   const getToken = (isDecoded = false) =>
     isDecoded ? decodeToken(token) : token;

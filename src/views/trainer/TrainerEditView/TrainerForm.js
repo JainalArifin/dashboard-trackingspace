@@ -216,7 +216,6 @@ const TrainerForm = ({ dataPartner, loading, id }) => {
                 </Button>
               </Link>
               &nbsp;
-              {console.log({isSubmitting, isValid, dirty})}
               <Button
                 color="primary"
                 disabled={isSubmitting || !isValid || !dirty}

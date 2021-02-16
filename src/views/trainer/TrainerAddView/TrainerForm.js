@@ -201,7 +201,6 @@ const TrainerForm = () => {
                 </Button>
               </Link>
               &nbsp;
-              {console.log({ isValid })}
               <Button
                 color="primary"
                 disabled={isSubmitting || !isValid || !dirty}
