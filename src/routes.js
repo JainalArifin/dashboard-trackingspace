@@ -3,14 +3,12 @@ import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import AccountView from 'src/views/account/AccountView';
-import Classroom from 'src/views/classroom/ClassroomListView';
 import DashboardView from 'src/views/reports/DashboardView';
 import LoginView from 'src/views/auth/LoginView';
 import NotFoundView from 'src/views/errors/NotFoundView';
 import ProductListView from 'src/views/product/ProductListView';
 import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
-import ClassroomAddView from './views/classroom/ClassroomAddView';
 import ClassroomEditView from './views/classroom/ClassroomEditView';
 import EventTable from './views/event/EventTable';
 import EventForm from './views/event/EventForm';
@@ -23,6 +21,8 @@ import TrainerEditView from './views/trainer/TrainerEditView';
 import MemberTable from './views/member/MemberTable';
 import VideoClassTable from './views/videoClass/VideoClassTable';
 import VideoClassForm from './views/videoClass/VideoClassForm';
+import ClassroomTable from 'src/views/classroom/ClassroomTable';
+import ClassroomForm from './views/classroom/ClassroomForm';
 
 const routes = (isLogin) => [
   {
@@ -33,9 +33,9 @@ const routes = (isLogin) => [
       { path: 'trainer', element: <TrainerListView /> },
       { path: 'trainer/add', element: <TrainerAddView /> },
       { path: 'trainer/edit/:id', element: <TrainerEditView /> },
-      { path: 'classroom', element: <Classroom /> },
-      { path: 'classroom/add', element: <ClassroomAddView /> },
-      { path: 'classroom/edit', element: <ClassroomEditView /> },
+      { path: 'classroom', element: <ClassroomTable /> },
+      { path: 'classroom/add', element: <ClassroomForm /> },
+      { path: 'classroom/edit', element: <ClassroomForm /> },
       { path: 'event', element: <EventTable /> },
       { path: 'event/add', element: <EventForm /> },
       { path: 'event/edit', element: <EventForm /> },

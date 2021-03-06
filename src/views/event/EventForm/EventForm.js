@@ -125,7 +125,7 @@ const EventForm = ({
             </Grid>
 
             <Grid item md={12} xs={12}>
-              <p>Image Trainer</p>
+              <p>Image Event</p>
               <input
                 name="imgLink"
                 onBlur={handleBlur}

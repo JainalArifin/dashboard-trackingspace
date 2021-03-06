@@ -29,6 +29,12 @@ const services = {
   EDIT_VIDEO_CLASS: (id) => `/videoclass/${id}`,
   DELETE_VIDEO_CLASS: (id) => `/videoclass/${id}`,
 
+  // for classroom
+  GET_CLASSROOM: '/classroom',
+  ADD_CLASSROOM: '/classroom',
+  DELETE_CLASSROOM: (id) => `/classroom/${id}`,
+  EDIT_CLASSROOM: (id) => `/classroom/${id}`,
+
 };
 
 export default services;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Container, makeStyles } from '@material-ui/core';
 import Page from 'src/components/Page';
-import RoomTable from './VideoClassTable';
+import ClassroomTable from './ClassroomTable';
 import Toolbar from './Toolbar';
 import useAxios from 'axios-hooks';
 import { SERVICES } from 'src/configs';
@@ -18,26 +18,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const VideoClassTableContainer = ({ mainActions: { getVideoClassDetail } }) => {
+const ClassroomTableContainer = ({ mainActions: { getClassroomDetail } }) => {
   const classes = useStyles();
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState(null);
-  const [videoClassId, setVideoClassId] = useState(null);
+  const [classroomId, setClassroomId] = useState(null);
 
   const { open, handleOpen, handleClose, body, setBody } = useModal();
 
   const navigate = useNavigate();
 
   const [{ data: queryData, loading, error }, refetch] = useAxios({
-    url: SERVICES.GET_VIDEO_CLASS,
+    url: SERVICES.GET_CLASSROOM,
     method: 'GET',
     params: { perPage: limit, page: page + 1, search }
   });
 
   const [, deleteRoom] = useAxios(
     {
-      url: SERVICES.DELETE_VIDEO_CLASS(videoClassId),
+      url: SERVICES.DELETE_CLASSROOM(classroomId),
       method: 'DELETE'
     },
     { manual: true }
@@ -53,7 +53,7 @@ const VideoClassTableContainer = ({ mainActions: { getVideoClassDetail } }) => {
   };
 
   function handleOpenModalClick(id, title) {
-    setVideoClassId(id);
+    setClassroomId(id);
 
     setBody(`Are you sure you want to delete ${title} from list?`);
 
@@ -66,21 +66,21 @@ const VideoClassTableContainer = ({ mainActions: { getVideoClassDetail } }) => {
   };
 
   const handleEdit = id => {
-    const _videoClass = queryData.data.find(_data => _data._id === id);
+    const _classroom = queryData.data.find(_data => _data._id === id);
 
+  
+    getClassroomDetail(_classroom);
 
-    getVideoClassDetail(_videoClass);
-
-    navigate(`/app/video-class/edit`);
+    navigate(`/app/classroom/edit`);
   };
   
   const moveAdd = () => {
-    getVideoClassDetail({});
-    navigate(`/app/video-class/add`);
+    getClassroomDetail({});
+    navigate(`/app/classroom/add`);
   }
 
   return (
-    <Page className={classes.root} title="Video Class">
+    <Page className={classes.root} title="Classroom">
       <Container maxWidth={false}>
         <Toolbar
           handleSearch={handleSearch}
@@ -88,7 +88,7 @@ const VideoClassTableContainer = ({ mainActions: { getVideoClassDetail } }) => {
           moveAdd={moveAdd}
         />
         <Box mt={3}>
-          <RoomTable
+          <ClassroomTable
             queryData={queryData}
             loading={loading}
             error={error}
@@ -112,4 +112,4 @@ const VideoClassTableContainer = ({ mainActions: { getVideoClassDetail } }) => {
   );
 };
 
-export default VideoClassTableContainer;
+export default ClassroomTableContainer;

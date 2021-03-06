@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Grid, makeStyles } from '@material-ui/core';
 import Page from 'src/components/Page';
-import EventForm from './EventForm';
+import ClassroomForm from './ClassroomForm';
 import useAxios from 'axios-hooks';
 import { SERVICES } from 'src/configs';
 import { objectToFormData } from '../../../utils/converter';
@@ -16,9 +16,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EventFormContainer = ({ event, mainActions: { getEventDetail } }) => {
+const ClassroomFormContainer = ({
+  classroom,
+  mainActions: { getClassroomDetail }
+}) => {
   const classes = useStyles();
-  const { id } = useParams();
   const navigate = useNavigate();
 
   const [
@@ -29,9 +31,18 @@ const EventFormContainer = ({ event, mainActions: { getEventDetail } }) => {
     params: { all: true }
   });
 
-  const [, addEvent] = useAxios(
+  const [
+    { data: dataVideo, loading: loadingVideo, error: errorVideo }
+  ] = useAxios({
+    url: SERVICES.GET_VIDEO_CLASS,
+    method: 'GET',
+    params: { all: true }
+    
+  });
+
+  const [, addClassroom] = useAxios(
     {
-      url: SERVICES.ADD_EVENT,
+      url: SERVICES.ADD_CLASSROOM,
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -40,9 +51,9 @@ const EventFormContainer = ({ event, mainActions: { getEventDetail } }) => {
     { manual: true }
   );
 
-  const [, editEvent] = useAxios(
+  const [, editClassroom] = useAxios(
     {
-      url: SERVICES.EDIT_EVENT(''),
+      url: SERVICES.EDIT_CLASSROOM(''),
       method: 'PUT',
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -55,39 +66,42 @@ const EventFormContainer = ({ event, mainActions: { getEventDetail } }) => {
     const data = objectToFormData(values);
 
     if (values._id) {
-      await editEvent({
-        url: SERVICES.EDIT_EVENT(values._id),
+      await editClassroom({
+        url: SERVICES.EDIT_CLASSROOM(values._id),
         data
       });
 
-      navigate('/app/event', { replace: true });
+      navigate('/app/classroom', { replace: true });
     } else {
-      // const data = objectToFormData(values);
+      console.log({ values })
 
-      await addEvent({ data });
+      await addClassroom({ data });
 
-      navigate('/app/event', { replace: true });
+      navigate('/app/classroom', { replace: true });
     }
   };
 
-  const handleBack = event => {
-    getEventDetail({});
+  const handleBack = () => {
+    getClassroomDetail({});
 
-    navigate(`/app/event`);
+    navigate(`/app/classroom`);
   };
 
   return (
-    <Page className={classes.root} title="EventFormContainer">
+    <Page className={classes.root} title="ClassroomFormContainer">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item lg={8} md={6} xs={12}>
-            <EventForm
-              dataEvent={event}
+            <ClassroomForm
+              dataClassroom={classroom}
               handleSubmit={handleSubmit}
               handleBack={handleBack}
               dataTrainer={dataTrainer}
               loadingTrainer={loadingTrainer}
               errorTrainer={errorTrainer}
+              dataVideo={dataVideo}
+              loadingVideo={loadingVideo}
+              errorVideo={errorVideo}
             />
           </Grid>
         </Grid>
@@ -96,4 +110,4 @@ const EventFormContainer = ({ event, mainActions: { getEventDetail } }) => {
   );
 };
 
-export default EventFormContainer;
+export default ClassroomFormContainer;

@@ -52,7 +52,7 @@ const items = [
   {
     href: '/app/classroom',
     icon: BookIcon,
-    title: 'Classroom'
+    title: 'Class room'
   },
   {
     href: '/app/event',

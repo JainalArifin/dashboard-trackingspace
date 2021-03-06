@@ -13,6 +13,8 @@ import {
 } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import YouTube from '@material-ui/icons/YouTube';
+import { SERVICES } from 'src/configs';
+import useAxios from 'axios-hooks';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,6 +37,16 @@ const useStyles = makeStyles(theme => ({
 const Classroom = ({ className, ...rest }) => {
   const classes = useStyles();
 
+  const [{ data: queryData, loading, error }] = useAxios({
+    url: SERVICES.GET_CLASSROOM,
+    method: 'GET'
+  });
+
+  const [{ data: queryDataVideo, loadingVideo, errorVideo }] = useAxios({
+    url: SERVICES.GET_VIDEO_CLASS,
+    method: 'GET'
+  });
+
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
@@ -44,7 +56,7 @@ const Classroom = ({ className, ...rest }) => {
               Total Kelas
             </Typography>
             <Typography color="textPrimary" variant="h3">
-              10
+              {loading ? 'Loading' : queryData.total_data}
             </Typography>
           </Grid>
           <Grid item>
@@ -55,7 +67,7 @@ const Classroom = ({ className, ...rest }) => {
         </Grid>
         <Box mt={2} display="flex" alignItems="center">
           <Typography className={classes.differenceValue} variant="body1">
-            100
+            {loadingVideo ? 'Loading' : queryDataVideo && queryDataVideo.total_data}
           </Typography>
           <Typography color="textSecondary" variant="caption">
             Video Kelas
