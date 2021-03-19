@@ -50,6 +50,7 @@ export default function VideoFiled({
                   value={list._id}
                   variant="outlined"
                 >
+                  {!list._id && <option value=""></option>}
                   {loadingVideo ? (
                     <option>loading...</option>
                   ) : (

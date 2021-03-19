@@ -112,6 +112,7 @@ const EventForm = ({
                 value={values.userId}
                 variant="outlined"
               >
+                {!values.userId && <option value=""></option>}
                 {loadingTrainer ? (
                   <option>loading...</option>
                 ) : (

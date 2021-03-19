@@ -29,9 +29,7 @@ const ImageLink = styled.img`
   padding: 5px;
 `;
 
-const initialVideo = [
-  ''
-];
+const initialVideo = [''];
 
 const hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
@@ -92,6 +90,7 @@ const ClassroomForm = ({
                 value={values.userId}
                 variant="outlined"
               >
+                {!values.userId && <option value=""></option>}
                 {loadingTrainer ? (
                   <option>loading...</option>
                 ) : (
