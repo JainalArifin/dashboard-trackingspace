@@ -15,7 +15,6 @@ import { SERVICES } from '../../configs';
 import { useTokenContext } from '../../contexts';
 import { decodeToken } from '../../utils/converter';
 
-
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -40,7 +39,6 @@ const LoginView = () => {
   const { setToken } = useTokenContext();
 
   const [serverState, setServerState] = useState();
-  
 
   const handleServerResponse = (ok, msg) => {
     setServerState({ ok, msg });
@@ -49,7 +47,7 @@ const LoginView = () => {
   const [, loginForm] = useAxios(
     {
       url: SERVICES.LOGIN_FORM,
-      method: 'POST',
+      method: 'POST'
     },
     { manual: true }
   );
@@ -59,16 +57,18 @@ const LoginView = () => {
 
     try {
       const response = await loginForm({ data: values });
-      const { token } = response.data
+      const { token, message } = response.data;
+      if (message) {
+        return handleServerResponse(true, message);
+      }
       window.localStorage.setItem('authToken', token);
       setToken(token);
 
       const { role } = decodeToken(token);
 
-      if(role === 'admin') {
+      if (role === 'admin') {
         navigate('/app/dashboard', { replace: true });
       }
-
     } catch (error) {
       const { email } = error.response.data;
       actions.setSubmitting(false);
@@ -99,9 +99,6 @@ const LoginView = () => {
                 .max(255)
                 .required('Password is required')
             })}
-            // onSubmit={() => {
-            //   navigate('/app/dashboard', { replace: true });
-            // }}
             onSubmit={handleLogin}
           >
             {({
@@ -125,8 +122,8 @@ const LoginView = () => {
                   </p>
                 )}
                 <TextField
-                  error={Boolean(touched.email && errors.email)}
                   fullWidth
+                  error={Boolean(touched.email && errors.email)}
                   helperText={touched.email && errors.email}
                   label="Email Address"
                   margin="normal"

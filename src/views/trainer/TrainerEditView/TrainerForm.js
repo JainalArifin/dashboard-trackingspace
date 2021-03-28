@@ -46,9 +46,8 @@ const TrainerForm = ({ dataPartner, loading, id }) => {
     const data = objectToFormData(values);
 
     try {
-      const response = await editTrainer({ data });
+       await editTrainer({ data });
 
-      console.log({ response });
       navigate('/app/trainer', { replace: true });
     } catch (error) {
       console.log({ error });

@@ -31,7 +31,8 @@ const TotalMember = ({ className, ...rest }) => {
   
   const [{ data: queryData, loading, error }, refetch] = useAxios({
     url: SERVICES.GET_MEMBER,
-    method: 'GET'
+    method: 'GET',
+    params: { role: 'member' }
   });
 
   return (
@@ -57,7 +58,7 @@ const TotalMember = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              {loading ? 'Loading' : queryData.total_data}
+              {loading ? 'Loading' : queryData.data.length}
             </Typography>
           </Grid>
           <Grid item>

@@ -32,6 +32,7 @@ const ImageLink = styled.img`
 const initialVideo = [''];
 
 const hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+const category = ['', 'Developer', 'Designer', 'Data Science', 'Lainnya'];
 
 const ClassroomForm = ({
   dataTrainer,
@@ -100,6 +101,25 @@ const ClassroomForm = ({
                     </option>
                   ))
                 )}
+              </TextField>
+            </Grid>
+            <Grid item md={12} xs={12}>
+              <TextField
+                fullWidth
+                label="Select Category"
+                name="category"
+                onChange={handleChange}
+                required
+                select
+                SelectProps={{ native: true }}
+                value={values.category}
+                variant="outlined"
+              >
+                {category.map((option, idx) => (
+                  <option key={idx} value={option}>
+                    {option}
+                  </option>
+                ))}
               </TextField>
             </Grid>
 
@@ -199,6 +219,7 @@ const ClassroomForm = ({
                   padding: 10
                 }}
               >
+                <h5 style={{ marginBottom: 10 }}>Select Video</h5>
                 <VideoFiled
                   name="videoId"
                   dataVideo={dataVideo}
@@ -298,6 +319,7 @@ export default withFormik({
     return {
       _id: dataClassroom._id,
       title: dataClassroom.title || '', //
+      category: dataClassroom.category || '', //
       userId: dataClassroom.userId ? dataClassroom.userId._id : '', //
       imgLink: dataClassroom.imgLink || null, //
       classRequirement: dataClassroom.classRequirement || '', //
@@ -309,7 +331,8 @@ export default withFormik({
       max: dataClassroom.max || ''
     };
   },
-  handleSubmit: (payload, { props, ...rest }) =>
-    props.handleSubmit(payload, rest),
+  handleSubmit: (payload, { props, ...rest }) => {
+    props.handleSubmit(payload, rest);
+  },
   displayName: 'ClassroomForm'
 })(ClassroomForm);

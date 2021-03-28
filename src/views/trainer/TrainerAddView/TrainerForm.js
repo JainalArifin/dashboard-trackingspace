@@ -36,9 +36,8 @@ const TrainerForm = () => {
     const data = objectToFormData(values);
 
     try {
-      const response = await addTrainer({ data });
+       await addTrainer({ data });
 
-      console.log({ response });
       navigate('/app/trainer', { replace: true });
     } catch (error) {
       console.log({ error });

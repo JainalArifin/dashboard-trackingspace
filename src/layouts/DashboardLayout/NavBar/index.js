@@ -22,7 +22,7 @@ import {
   Book as BookIcon,
   Tag as TagIcon,
   Columns as RoomIcon,
-  Users as TrainerIcon,
+  Users as MemberIcon,
   Video as VideoIcon
 } from 'react-feather';
 import NavItem from './NavItem';
@@ -41,13 +41,13 @@ const items = [
   },
   {
     href: '/app/trainer',
-    icon: TrainerIcon,
+    icon: UserIcon,
     title: 'Trainer'
   },
   {
-    href: '/app/video-class',
-    icon: VideoIcon,
-    title: 'Video Class'
+    href: '/app/member',
+    icon: MemberIcon,
+    title: 'Member'
   },
   {
     href: '/app/classroom',
@@ -63,12 +63,8 @@ const items = [
     href: '/app/room',
     icon: RoomIcon,
     title: 'Room'
-  },
-  {
-    href: '/app/member',
-    icon: UserIcon,
-    title: 'Member'
   }
+  
 ];
 
 const useStyles = makeStyles(() => ({

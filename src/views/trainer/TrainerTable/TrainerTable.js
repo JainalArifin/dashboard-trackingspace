@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ClassroomTable = ({
+const TrainerTable = ({
   className,
   classroom,
   queryData,
@@ -47,21 +47,21 @@ const ClassroomTable = ({
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-  const classroomId = anchorEl && anchorEl.dataset.id;
-  const classroomTitle = anchorEl && anchorEl.dataset.title;
+  const trainerId = anchorEl && anchorEl.dataset.id;
+  const trainerFullname = anchorEl && anchorEl.dataset.fullname;
 
-  const handleLimitChange = room => {
-    setLimit(room.target.value);
+  const handleLimitChange = trainer => {
+    setLimit(trainer.target.value);
     refetch();
   };
 
-  const handlePageChange = (room, newPage) => {
+  const handlePageChange = (trainer, newPage) => {
     setPage(newPage);
     refetch();
   };
 
-  const handleClick = room => {
-    setAnchorEl(room.currentTarget);
+  const handleClick = trainer => {
+    setAnchorEl(trainer.currentTarget);
   };
 
   const handleClose = () => {
@@ -69,15 +69,15 @@ const ClassroomTable = ({
   };
 
   const _handleEdit = () => {
-    handleEdit(classroomId);
+    handleEdit(trainerId);
   };
 
   function _handleOpenModalClick() {
     handleClose();
 
-    handleOpenModalClick(classroomId, classroomTitle);
+    handleOpenModalClick(trainerId, trainerFullname);
   }
-
+  
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <PerfectScrollbar>
@@ -85,13 +85,13 @@ const ClassroomTable = ({
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Title class</TableCell>
-                <TableCell>Trainer</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Category</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Role</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
+
             {(() => {
               if (loading) {
                 return (
@@ -106,23 +106,18 @@ const ClassroomTable = ({
               if (queryData) {
                 return (
                   <TableBody>
-                    {queryData.data.map((classroom, index) => {
+                    {queryData.data.map((trainer, index) => {
                       return (
                         <TableRow hover key={index}>
-                          <TableCell>{classroom.title}</TableCell>
-                          <TableCell>
-                            {classroom.userId
-                              ? classroom.userId.fullName
-                              : '-'}
-                          </TableCell>
-                          <TableCell>{classroom.type ? 'online' : 'offline'}</TableCell>
-                          <TableCell>{classroom.category === '' ? '' : classroom.category }</TableCell>
+                          <TableCell>{trainer.fullName}</TableCell>
+                          <TableCell>{trainer.email}</TableCell>
+                          <TableCell>{trainer.role}</TableCell>
                           <TableCell>
                             <IconButton
                               aria-controls="simple-menu"
                               aria-haspopup="true"
-                              data-id={classroom._id}
-                              data-title={classroom.title}
+                              data-id={trainer._id}
+                              data-fullname={trainer.fullName}
                               onClick={handleClick}
                             >
                               <MoreHorizontal />
@@ -164,9 +159,9 @@ const ClassroomTable = ({
   );
 };
 
-ClassroomTable.propTypes = {
+TrainerTable.propTypes = {
   className: PropTypes.string,
   classroom: PropTypes.array.isRequired
 };
 
-export default ClassroomTable;
+export default TrainerTable;

@@ -23,6 +23,8 @@ import VideoClassTable from './views/videoClass/VideoClassTable';
 import VideoClassForm from './views/videoClass/VideoClassForm';
 import ClassroomTable from 'src/views/classroom/ClassroomTable';
 import ClassroomForm from './views/classroom/ClassroomForm';
+import TrainerTable from './views/trainer/TrainerTable';
+import TrainerForm from './views/trainer/TrainerForm';
 
 const routes = (isLogin) => [
   {
@@ -30,9 +32,9 @@ const routes = (isLogin) => [
     element: isLogin ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'account', element: <AccountView /> }, //1
-      { path: 'trainer', element: <TrainerListView /> },
-      { path: 'trainer/add', element: <TrainerAddView /> },
-      { path: 'trainer/edit/:id', element: <TrainerEditView /> },
+      { path: 'trainer', element: <TrainerTable /> },
+      { path: 'trainer/add', element: <TrainerForm /> },
+      { path: 'trainer/edit', element: <TrainerForm /> },
       { path: 'classroom', element: <ClassroomTable /> },
       { path: 'classroom/add', element: <ClassroomForm /> },
       { path: 'classroom/edit', element: <ClassroomForm /> },

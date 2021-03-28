@@ -26,7 +26,7 @@ const MemberTableContainer = ({ mainActions: { getRoomDetail } }) => {
   const [{ data: queryData, loading, error }, refetch] = useAxios({
     url: SERVICES.GET_MEMBER,
     method: 'GET',
-    params: { perPage: limit, page: page + 1, search }
+    params: { perPage: limit, page: page + 1, search, role: 'member' }
   });
 
 

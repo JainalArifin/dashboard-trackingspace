@@ -63,18 +63,19 @@ const ClassroomFormContainer = ({
   );
 
   const handleSubmit = async values => {
-    const data = objectToFormData(values);
+    
 
+    const data = await objectToFormData(values);
+    
     if (values._id) {
       await editClassroom({
         url: SERVICES.EDIT_CLASSROOM(values._id),
         data
       });
-
+      
       navigate('/app/classroom', { replace: true });
     } else {
-      console.log({ values })
-
+      
       await addClassroom({ data });
 
       navigate('/app/classroom', { replace: true });

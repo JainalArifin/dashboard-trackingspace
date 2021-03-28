@@ -38,7 +38,7 @@ const TotalTrainer = ({ className, ...rest }) => {
   const classes = useStyles();
 
   const [{ data: queryData, loading, error }, refetch] = useAxios({
-    url: SERVICES.GET_MEMBER,
+    url: SERVICES.GET_TRAINER,
     method: 'GET',
   });
 
